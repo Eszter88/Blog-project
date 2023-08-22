@@ -6,37 +6,44 @@ import { userRoute } from "./pages/User";
 import { todosRoute } from "./pages/TodoList";
 import RootLayout from "./layouts/RootLayout";
 import Comments from "./pages/Comments";
+import Error404 from "./pages/Error404";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
-      { index: true, element: <Navigate to="/posts" /> },
       {
-        path: "posts",
+        errorElement: <Error404 />,
         children: [
-          { index: true, ...postListRoute },
+          { index: true, element: <Navigate to="/posts" /> },
           {
-            path: ":postID",
+            path: "posts",
             children: [
-              { index: true, ...postRoute },
-              { path: "comments", element: <Comments /> },
+              { index: true, ...postListRoute },
+              {
+                path: ":postID",
+                children: [
+                  { index: true, ...postRoute },
+                  { path: "comments", element: <Comments /> },
+                ],
+              },
             ],
           },
-        ],
-      },
-      {
-        path: "users",
-        children: [
-          { index: true, ...UserListRoute },
           {
-            path: ":userID",
-            children: [{ index: true, ...userRoute }],
+            path: "users",
+            children: [
+              { index: true, ...UserListRoute },
+              {
+                path: ":userID",
+                children: [{ index: true, ...userRoute }],
+              },
+            ],
           },
+          { path: "todos", children: [{ index: true, ...todosRoute }] },
+          { path: "*", element: <Error404 /> },
         ],
       },
-      { path: "todos", children: [{ index: true, ...todosRoute }] },
     ],
   },
 ]);
