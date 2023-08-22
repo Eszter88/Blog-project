@@ -7,14 +7,12 @@ function Post() {
   const post = useLoaderData();
   return (
     <>
-      <div className="container">
-        <h1 className="page-title">{post.title}</h1>
-        <span className="page-subtitle">
-          By: <a href="user.html"></a>
-        </span>
-        <div>{post.body}</div>
-        <Comments />
-      </div>
+      <h1 className="page-title">{post.title}</h1>
+      <span className="page-subtitle">
+        By: <a href="user.html"></a>
+      </span>
+      <div>{post.body}</div>
+      <Comments />
     </>
   );
 }

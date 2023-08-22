@@ -4,7 +4,7 @@ import { useLoaderData } from "react-router-dom";
 function TodoList() {
   const todos = useLoaderData();
   return (
-    <div className="container">
+    <>
       <h1 className="page-title">Todos</h1>
       <ul>
         {todos.map((todo) => (
@@ -16,7 +16,7 @@ function TodoList() {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 
