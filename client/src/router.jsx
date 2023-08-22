@@ -3,7 +3,7 @@ import { postListRoute } from "./pages/PostList";
 import { UserListRoute } from "./pages/UserList";
 import { postRoute } from "./pages/Post";
 import { userRoute } from "./pages/User";
-import TodoList from "./pages/TodoList";
+import { todosRoute } from "./pages/TodoList";
 import RootLayout from "./layouts/RootLayout";
 import Comments from "./pages/Comments";
 
@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      { path: "todos", element: <TodoList /> },
+      { path: "todos", children: [{ index: true, ...todosRoute }] },
     ],
   },
 ]);
