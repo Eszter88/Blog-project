@@ -5,7 +5,7 @@ import { postRoute } from "./pages/Post";
 import { userRoute } from "./pages/User";
 import { todosRoute } from "./pages/TodoList";
 import RootLayout from "./layouts/RootLayout";
-import Comments from "./pages/Comments";
+
 import Error404 from "./pages/Error404";
 
 export const router = createBrowserRouter([
@@ -23,10 +23,7 @@ export const router = createBrowserRouter([
               { index: true, ...postListRoute },
               {
                 path: ":postID",
-                children: [
-                  { index: true, ...postRoute },
-                  { path: "comments", element: <Comments /> },
-                ],
+                ...postRoute,
               },
             ],
           },
@@ -35,12 +32,12 @@ export const router = createBrowserRouter([
             children: [
               { index: true, ...UserListRoute },
               {
-                path: ":userID",
-                children: [{ index: true, ...userRoute }],
+                path: ":userId",
+                ...userRoute,
               },
             ],
           },
-          { path: "todos", children: [{ index: true, ...todosRoute }] },
+          { path: "todos", ...todosRoute },
           { path: "*", element: <Error404 /> },
         ],
       },

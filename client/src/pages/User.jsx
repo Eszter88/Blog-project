@@ -1,9 +1,12 @@
-import React from "react";
 import { useLoaderData } from "react-router-dom";
-import axios from "axios";
+import { getPosts } from "../api/posts";
+import { getTodos } from "../api/todos";
+import { getUser } from "../api/users";
+import PostCard from "../components/PostCard";
+import TodoItem from "../components/TodoItem";
 
 function User() {
-  const user = useLoaderData();
+  const { user, posts, todos } = useLoaderData();
 
   return (
     <>
@@ -16,39 +19,32 @@ function User() {
         <b>Website:</b> {user.website}
       </div>
       <div>
-        <b>Address:</b> {user.address.street}
-        {user.address.suite}
+        <b>Address:</b> {user.address.street} {user.address.suite}{" "}
         {user.address.city} {user.address.zipcode}
       </div>
+
       <h3 className="mt-4 mb-2">Posts</h3>
       <div className="card-grid">
-        <div className="card">
-          <div className="card-header">
-            sunt aut facere repellat provident occaecati excepturi optio
-            reprehenderit
-          </div>
-          <div className="card-body">
-            <div className="card-preview-text">
-              quia et suscipit suscipit recusandae consequuntur expedita et cum
-              reprehenderit molestiae ut ut quas totam nostrum rerum est autem
-              sunt rem eveniet architecto
-            </div>
-          </div>
-          <div className="card-footer">
-            <a className="btn" href="posts.html">
-              View
-            </a>
-          </div>
-        </div>
+        {posts.map((post) => (
+          <PostCard key={post.id} {...post} />
+        ))}
       </div>
+      <h3 className="mt-4 mb-2">Todos</h3>
+      <ul>
+        {todos.map((todo) => (
+          <TodoItem key={todo.id} {...todo} />
+        ))}
+      </ul>
     </>
   );
 }
 
-export function loader({ params, request: { signal } }) {
-  return axios
-    .get(`http://127.0.0.1:3000/users/${params.userID}`, { signal })
-    .then((res) => res.data);
+async function loader({ request: { signal }, params: { userId } }) {
+  const posts = getPosts({ signal, params: { userId } });
+  const todos = getTodos({ signal, params: { userId } });
+  const user = getUser(userId, { signal });
+
+  return { posts: await posts, todos: await todos, user: await user };
 }
 
 export const userRoute = {
