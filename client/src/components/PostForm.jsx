@@ -1,8 +1,10 @@
 import React from "react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigation } from "react-router-dom";
 import FormGroup from "./FormGroup";
 
 function PostForm({ users, defaultValues = {} }) {
+  const { state } = useNavigation();
+  const isSubmitting = state === "submitting" || state === "loading";
   return (
     <Form method="post" className="form">
       <div className="form-row">
@@ -40,7 +42,9 @@ function PostForm({ users, defaultValues = {} }) {
         <Link className="btn btn-outline" to="..">
           Cancel
         </Link>
-        <button className="btn">Save</button>
+        <button className="btn" disabled={isSubmitting}>
+          {isSubmitting ? "Saving" : "Save"}
+        </button>
       </div>
     </Form>
   );
