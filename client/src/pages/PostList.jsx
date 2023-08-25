@@ -8,13 +8,19 @@ function PostList() {
   const {
     users,
     posts,
-    searchParams: { query },
+    searchParams: { query, userId },
   } = useLoaderData();
+
   const queryRef = useRef();
+  const userIdRef = useRef();
 
   useEffect(() => {
-    queryRef.current.value = query;
+    queryRef.current.value = query || "";
   }, [query]);
+
+  useEffect(() => {
+    userIdRef.current.value = userId || "";
+  }, [userId]);
 
   return (
     <>
@@ -32,17 +38,17 @@ function PostList() {
             <label htmlFor="query">Query</label>
             <input type="search" name="query" id="query" ref={queryRef} />
           </div>
-          {/* <div className="form-group">
+          <div className="form-group">
             <label htmlFor="userId">Author</label>
-            <select type="search" name="userId" id="userId">
+            <select type="search" name="userId" id="userId" ref={userIdRef}>
               <option value="">Any</option>
-              {users.map((user) => {
+              {users.map((user) => (
                 <option value={user.id} key={user.id}>
                   {user.name}
-                </option>;
-              })}
+                </option>
+              ))}
             </select>
-          </div> */}
+          </div>
           <button className="btn">Filter</button>
         </div>
       </Form>
@@ -58,7 +64,10 @@ function PostList() {
 async function loader({ request: { signal, url } }) {
   const searchParams = new URL(url).searchParams;
   const query = searchParams.get("query") || "";
+  const userId = searchParams.get("userId");
   const filterParams = { q: query };
+
+  if (userId !== "") filterParams.userId = userId; //if not emty add userId to filterParams
 
   const posts = getPosts({ signal, params: filterParams });
   const users = getUsers({ signal });
@@ -66,7 +75,7 @@ async function loader({ request: { signal, url } }) {
   return {
     posts: await posts,
     users: await users,
-    searchParams: { query },
+    searchParams: { query, userId },
   };
 }
 
