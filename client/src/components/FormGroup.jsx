@@ -1,9 +1,14 @@
 import React from "react";
-import { useActionData } from "react-router-dom";
 
-function FormGroup({ children }) {
-  const errors = useActionData();
-  return <div className={`form-group ${errors && "error"}`}>{children}</div>;
+function FormGroup({ children, errorMessage }) {
+  return (
+    <div className={`form-group ${errorMessage != null ? "error" : ""}`}>
+      {children}
+      {errorMessage != null && (
+        <div className="error-message">{errorMessage}</div>
+      )}
+    </div>
+  );
 }
 
 export default FormGroup;

@@ -2,13 +2,13 @@ import React from "react";
 import { Form, Link, useNavigation } from "react-router-dom";
 import FormGroup from "./FormGroup";
 
-function PostForm({ users, defaultValues = {} }) {
+function PostForm({ users, defaultValues = {}, errors = {} }) {
   const { state } = useNavigation();
   const isSubmitting = state === "submitting" || state === "loading";
   return (
     <Form method="post" className="form">
       <div className="form-row">
-        <FormGroup>
+        <FormGroup errorMessage={errors.title}>
           <label htmlFor="title">Title</label>
           <input
             type="text"
@@ -17,7 +17,7 @@ function PostForm({ users, defaultValues = {} }) {
             defaultValue={defaultValues.title}
           />
         </FormGroup>
-        <FormGroup>
+        <FormGroup errorMessage={errors.userId}>
           <label htmlFor="userId">Author</label>
           <select name="userId" id="userId" defaultValue={defaultValues.usedId}>
             {users.map((user) => (
@@ -29,7 +29,7 @@ function PostForm({ users, defaultValues = {} }) {
         </FormGroup>
       </div>
       <div className="form-row">
-        <FormGroup>
+        <FormGroup errorMessage={errors.body}>
           <label htmlFor="body">Body</label>
           <textarea
             name="body"
@@ -48,6 +48,16 @@ function PostForm({ users, defaultValues = {} }) {
       </div>
     </Form>
   );
+}
+
+export function postFormValidator({ title, body, userId }) {
+  const errors = {};
+
+  if (title === "") return (errors.title = "Required title");
+  if (body === "") return (errors.body = "Required body");
+  if (userId === "") return (errors.userId = "Required userId");
+
+  return errors;
 }
 
 export default PostForm;

@@ -2,15 +2,16 @@ import React from "react";
 import { redirect, useActionData, useLoaderData } from "react-router-dom";
 import { createPost } from "../api/posts";
 import { getUsers } from "../api/users";
-import PostForm from "../components/PostForm";
+import PostForm, { postFormValidator } from "../components/PostForm";
 
 function PostNew() {
   const users = useLoaderData();
+  const errors = useActionData();
 
   return (
     <>
       <h1 className="page-title">New Post</h1>
-      <PostForm users={users} />
+      <PostForm users={users} errors={errors} />
     </>
   );
 }
@@ -20,12 +21,10 @@ async function action({ request }) {
   const title = formData.get("title");
   const body = formData.get("body");
   const userId = formData.get("userId");
-  const errors = {};
 
-  if (title === "") return (errors.title = "Required");
-  if (body === "") return (errors.body = "Required");
+  const errors = postFormValidator({ title, body, userId });
 
-  if (Object.keys(errors).length) {
+  if (Object.keys(errors).length > 0) {
     return errors;
   }
 
